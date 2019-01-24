@@ -1,0 +1,32 @@
+kind: "DeploymentConfig"
+apiVersion: "v1"
+metadata:
+  name: "git-teste-docker"
+spec:
+  template: 
+    metadata:
+      labels:
+        name: "git-teste-docker"
+    spec:
+      containers:
+        - name: "git-teste-docker"
+          image: "git-teste-docker"
+          ports:
+            - containerPort: 8080
+              protocol: "TCP"
+  replicas: 1 
+  triggers:
+    - type: "ConfigChange" 
+    - type: "ImageChange" 
+      imageChangeParams:
+        automatic: true
+        containerNames:
+          - "git-teste-docker"
+        from:
+          kind: "ImageStreamTag"
+          name: "git-teste-docker:latest"
+  strategy: 
+    type: "Rolling"
+  paused: false 
+  revisionHistoryLimit: 2 
+  minReadySeconds: 0 

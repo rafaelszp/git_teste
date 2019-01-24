@@ -1,0 +1,32 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: git-teste-docker
+spec:
+  output:
+    to:
+      kind: ImageStreamTag
+      name: 'git-teste-docker:latest'
+  runPolicy: Serial
+  source:
+    git:
+      ref: master
+      uri: 'https://github.com/rafaelszp/git_teste.git'
+    type: Git
+  strategy:
+    dockerStrategy:
+    type: Docker
+  triggers:
+    - imageChange:
+        lastTriggeredImageID: >-
+          172.30.1.1:5000/openshift/nginx@sha256:7d48f4955ceb899e2900acd0b0afcf2eea25aef5c0720ec19c082ffdf4c19f03
+      type: ImageChange
+    - type: ConfigChange
+    - generic:
+        secret: a386b196e8227c90
+      type: Generic
+    - github:
+        secret: 640e67df4d5368c6
+      type: GitHub
+status:
+  lastVersion: 2
